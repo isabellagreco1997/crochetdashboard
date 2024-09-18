@@ -5,6 +5,7 @@ body {
     margin: 0;
     padding: 0;
     color: #333; /* Dark gray for text */
+    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 header {
@@ -28,38 +29,55 @@ header {
     margin-right: 15px;
 }
 
-header h1 {
-    color: #fff;
-    font-size: 30px;
-    margin: 0;
+/* Main Title */
+.main-title {
+    text-align: center;
+    color: #5c6ac4;
+    font-size: 28px;
+    margin-bottom: 20px;
+    display: none; /* Hidden by default */
 }
 
-/* Dashboard Layout */
-.dashboard-container {
-    display: grid;
-    grid-template-columns: 1fr 2fr; /* Two columns: Control Panel | Pattern Display */
+/* Main Content Layout */
+.main-content {
+    display: flex;
+    flex-wrap: wrap;
     gap: 20px;
-    padding: 20px 40px;
+    padding: 20px 20px; /* Adjusted padding to prevent overflow */
     max-width: 1200px;
     margin: 40px auto;
 }
 
+.section-wrapper {
+    flex: 1 1 300px;
+    max-width: calc(50% - 20px); /* Adjusted to fit within container */
+}
+
+.section-title {
+    color: #5c6ac4;
+    font-size: 20px;
+    margin-bottom: 15px;
+    padding-left: 0;
+}
+
 /* Control Panel */
-.control-panel {
+.control-panel, .pattern-display {
     background: #fff;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.control-panel h2 {
-    color: #5c6ac4;
-    font-size: 20px;
-    margin-bottom: 15px;
+.control-panel {
+    max-width: 100%;
 }
 
-input[type="number"] {
-    width: 100px;
+.pattern-display {
+    max-width: 100%;
+}
+
+input[type="number"], select {
+    width: 100%;
     padding: 8px;
     margin: 10px 0;
     border: 2px solid #ddd;
@@ -91,13 +109,11 @@ button:hover {
     background-color: #4a5aa6; /* Darker blue on hover */
 }
 
-select {
-    padding: 10px;
-    width: 100%;
-    border-radius: 12px;
-    border: 2px solid #ddd;
-    background-color: #fff;
-    color: #333; /* Dark gray text */
+.control-panel label {
+    display: block;
+    margin-bottom: 10px;
+    color: #5c6ac4; /* Match color with the theme */
+    font-weight: 600;
 }
 
 .button-group, .yarn-group {
@@ -109,37 +125,6 @@ select {
 }
 
 /* Pattern Display */
-
-.dashboard-container {
-    display: grid;
-    grid-template-columns: 1fr 2fr;  /* Two columns: Control Panel | Pattern Display */
-    gap: 20px;
-    padding: 10px 40px;
-    max-width: 1200px;
-    margin: 0 auto;                  /* Ensure it's centered */
-}
-
-/* Adjust the control panel and pattern display layout */
-.control-panel {
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.pattern-display {
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.pattern-display h2 {
-    color: #5c6ac4;
-    font-size: 20px;
-    margin-bottom: 15px;
-}
-
 .pattern-text {
     background-color: #fff;
     padding: 20px;
@@ -150,6 +135,7 @@ select {
     height: 85%;
     overflow-y: auto;
     white-space: pre-wrap;
+    min-height: 600px;
 }
 
 /* Disabled button style */
@@ -167,26 +153,26 @@ footer {
     border-top: 1px solid #ddd;
     margin-top: 40px;
 }
-  
+
 .footer-content {
     display: flex;
     flex-direction: column; /* Make the content stack vertically */
     align-items: center;
     gap: 15px;
 }
-  
+
 .footer-logo {
     width: 300px; /* Increase the size of your logo */
     height: auto;
     margin-bottom: 10px;
 }
-  
+
 footer p {
     font-family: 'Poppins', sans-serif;
     color: #fff; /* White text for readability */
     margin: 0;
 }
-  
+
 .etsy-button {
     display: inline-block;
     background-color: #f16521; /* Etsy's orange */
@@ -198,15 +184,16 @@ footer p {
     transition: background-color 0.3s ease;
     margin-top: 5px; /* Create separation between the text and button */
 }
-  
+
 .etsy-button:hover {
     background-color: #d35400; /* Darker shade of orange on hover */
 }
-  
+
+/* Social Media Icons */
 .social-icons {
     margin-top: 20px; /* Space between Etsy button and icons */
 }
-  
+
 .social-icons a {
     color: #fff;
     font-size: 24px;
@@ -214,45 +201,9 @@ footer p {
     text-decoration: none;
     transition: color 0.3s ease;
 }
-  
+
 .social-icons a:hover {
     color: #ddd; /* Lighten the icon color on hover */
-}
-    
-/* Dashboard Title Style */
-.dashboard-title {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 20px;
-    padding-top: 40px;
-    padding-left: 10px;
-    max-width: 1200px;
-    margin: 0 auto;     /* Adjust padding to match container */
-}
-
-.dashboard-title h1 {
-    font-size: 28px;
-    color: #333;
-    margin: 0;
-}
-
-/* Control Panel Dropdown */
-select {
-    padding: 10px;
-    width: 100%;
-    border-radius: 12px;
-    border: 2px solid #ddd;
-    background-color: #fff;
-    color: #333; /* Dark gray text */
-    margin-top: 15px;
-}
-
-/* Control Panel Styles */
-.control-panel label {
-    display: block;
-    margin-bottom: 10px;
-    color: #5c6ac4; /* Match color with the theme */
-    font-weight: 600;
 }
 
 /* Updates Section */
@@ -263,7 +214,7 @@ select {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Consistent shadow */
     margin-bottom: 20px;
     max-width: 1160px;
-    margin: 20px auto; /* Center it like the dashboard */
+    margin: 20px auto; /* Center it like the main content */
 }
 
 .updates-section p {
@@ -282,4 +233,86 @@ select {
     font-size: 16px;
     color: #5c6ac4;         /* Same blue as the theme */
     margin-bottom: 10px;
+}
+
+.updates-section a {
+    color: #5c6ac4; /* Match theme color */
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.updates-section a:hover {
+    color: #4a5aa6; /* Darken on hover */
+    text-decoration: underline;
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+        padding: 20px 10px; /* Reduce padding on smaller screens */
+    }
+
+    .section-wrapper {
+        max-width: 100%;
+    }
+
+    .control-panel, .pattern-display {
+        max-width: 100%;
+    }
+
+    .control-panel {
+        order: 2;
+    }
+
+    .pattern-display {
+        order: 3;
+    }
+
+    .main-title {
+        display: block; /* Show title on mobile */
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .footer-logo {
+        width: 200px;
+    }
+
+    .logo {
+        width: 200px;
+    }
+
+    .section-title {
+        padding-left: 10px; /* Reduce padding on smaller screens */
+    }
+}
+
+@media (min-width: 769px) {
+    .main-title {
+        display: none; /* Hide title on larger screens */
+    }
+}
+
+@media (max-width: 480px) {
+    button {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+
+    input[type="number"], select {
+        font-size: 14px;
+    }
+
+    .pattern-text {
+        font-size: 12px;
+    }
+
+    .main-content {
+        padding: 10px 5px; /* Further reduce padding on very small screens */
+    }
+
+    .main-title {
+        font-size: 20px;
+    }
 }

@@ -14,92 +14,112 @@
 
     <header>
         <div class="logo-container">
-          <img src="logo.png" alt="Logo" class="logo"> <!-- Only the logo remains in the header -->
+          <img src="logo.png" alt="Logo" class="logo">
         </div>
     </header>
-        <!-- Updates Section -->
-        <div class="updates-section">
-            <p><strong>Updates for: </strong> <span id="update-date"></span></p>
-            <p>Thank you all for showing interest in this project! Next updates:</p>
-            <ul>
-              <li>Small improvements based on TikTok feedback.</li>
-              <li>Add translations to different languages functionality.</li>
-            </ul>
-            <p>Found any issues or want to tell me how to improve? Send me a message on my 
-              <a href="https://www.tiktok.com/@knottycreationsbyisa" target="_blank">TikTok</a> 
-              or DM me on 
-              <a href="https://www.instagram.com/knottycreationsbyisa" target="_blank">Instagram</a>
-            </p>
-            <p>This app is still improving based on your feedback, so stay tuned for new features!</p>
-            <p><strong>Last updated:</strong> <span id="last-update-date">Wed 18 Sep 12:01</span></p>
 
-          </div>
-      
+  <!-- Main Content -->
+  <div class="main-content">
 
-  <div class="dashboard-container">
-    <!-- Control Panel -->
-    <section class="control-panel">
-      <h2>► Control Panel</h2>
-      
-      <label for="magic-ring-input">Magic Ring (stitches):</label>
-      <input type="number" id="magic-ring-input" value="6" min="1" />
-      <button id="start-magic-ring"><i class="fas fa-play"></i> Start Magic Ring</button>
+    <!-- Added Title -->
+    <h1 class="main-title">Crochet Pattern Generator</h1>
 
-      <label for="crochet-stitch">Choose Crochet Stitch:</label>
-      <select id="crochet-stitch">
-        <option value="sc">Single crochet (sc) - the most basic stitch used in amigurumi</option>
-        <option value="hdc">Half double crochet (hdc)</option>
-        <option value="dc">Double crochet (dc)</option>
-        <option value="sl st">Slip stitch (sl st)</option>
-        <option value="tc">Triple crochet (tc)</option>
-        <option value="bobble">Bobble stitch</option>
-        <option value="popcorn">Popcorn stitch</option>
-      </select>
+    <!-- Control Panel Section -->
+    <div class="section-wrapper">
+      <h2 class="section-title">► Control Panel</h2>
+      <section class="control-panel">
+        <!-- Control Panel Content -->
+        
+        <label for="magic-ring-input">Magic Ring (stitches):</label>
+        <input type="number" id="magic-ring-input" value="6" min="1" />
+        <button id="start-magic-ring"><i class="fas fa-play"></i> Start Magic Ring</button>
 
-      <div class="button-group">
-        <button id="add-increase"><i class="fas fa-plus-circle"></i> Add Increase</button>
-        <button id="add-decrease"><i class="fas fa-minus-circle"></i> Add Decrease</button>
-        <button id="repeat-round"><i class="fas fa-redo"></i> Repeat Last Round</button>
-        <button id="delete-last-round"><i class="fas fa-trash-alt"></i> Delete Last Round</button>
-        <button id="fasten-off"><i class="fas fa-cut"></i> Fasten Off</button>
-        <button id="clear-pattern"><i class="fas fa-broom"></i> Clear Entire Pattern</button>
-      </div>
+        <label for="crochet-stitch">Choose Crochet Stitch:</label>
+        <select id="crochet-stitch">
+          <option value="sc">Single crochet (sc) - the most basic stitch used in amigurumi</option>
+          <option value="hdc">Half double crochet (hdc)</option>
+          <option value="dc">Double crochet (dc)</option>
+          <option value="sl st">Slip stitch (sl st)</option>
+          <option value="tc">Triple crochet (tc)</option>
+          <option value="bobble">Bobble stitch</option>
+          <option value="popcorn">Popcorn stitch</option>
+        </select>
 
-      <div class="yarn-group">
-        <label for="yarn-color">Choose yarn color:</label>
-        <select id="yarn-color">
-            <option value="Color A">Color A</option>
-            <option value="Color B">Color B</option>
-            <option value="Color C">Color C</option>
-            <option value="Color D">Color D</option>
-            <option value="Color E">Color E</option>
-            <option value="Red">Red</option>
-            <option value="Blue">Blue</option>
-            <option value="Green">Green</option>
-            <option value="Yellow">Yellow</option>
-            <option value="Purple">Purple</option>
-            <option value="Pink">Pink</option>
-            <option value="White">White</option>
-            <option value="Black">Black</option>
-            <option value="Orange">Orange</option>
-            <option value="Teal">Teal</option>
-            <option value="Brown">Brown</option>
-            <option value="Magenta">Magenta</option>
-            <option value="Lavender">Lavender</option>
-            <option value="Gray">Gray</option>
-            <option value="Gold">Gold</option>
-            <option value="Silver">Silver</option>
-            
+        <div class="button-group">
+          <button id="add-increase"><i class="fas fa-plus-circle"></i> Add Increase</button>
+          <button id="add-decrease"><i class="fas fa-minus-circle"></i> Add Decrease</button>
+          <button id="repeat-round"><i class="fas fa-redo"></i> Repeat Last Round</button>
+          <button id="delete-last-round"><i class="fas fa-trash-alt"></i> Delete Last Round</button>
+          <button id="fasten-off"><i class="fas fa-cut"></i> Fasten Off</button>
+          <button id="clear-pattern"><i class="fas fa-broom"></i> Clear Entire Pattern</button>
+        </div>
+
+        <div class="yarn-group">
+          <label for="yarn-color">Choose yarn color:</label>
+          <select id="yarn-color">
+              <option value="Color A">Color A</option>
+              <option value="Color B">Color B</option>
+              <option value="Color C">Color C</option>
+              <option value="Color D">Color D</option>
+              <option value="Color E">Color E</option>
+              <option value="Red">Red</option>
+              <option value="Blue">Blue</option>
+              <option value="Green">Green</option>
+              <option value="Yellow">Yellow</option>
+              <option value="Purple">Purple</option>
+              <option value="Pink">Pink</option>
+              <option value="White">White</option>
+              <option value="Black">Black</option>
+              <option value="Orange">Orange</option>
+              <option value="Teal">Teal</option>
+              <option value="Brown">Brown</option>
+              <option value="Magenta">Magenta</option>
+              <option value="Lavender">Lavender</option>
+              <option value="Gray">Gray</option>
+              <option value="Gold">Gold</option>
+              <option value="Silver">Silver</option>
           </select>
-        <button id="add-yarn-color"><i class="fas fa-palette"></i> Add Yarn Color</button>
-      </div>
-    </section>
+          <button id="add-yarn-color"><i class="fas fa-palette"></i> Add Yarn Color</button>
+        </div>
+      </section>
+    </div>
 
-    <!-- Pattern Display -->
-    <section class="pattern-display">
-      <h2>► Your Crochet Pattern</h2>
-      <div id="pattern" class="pattern-text"></div>
-    </section>
+    <!-- Pattern Display Section -->
+    <div class="section-wrapper">
+      <h2 class="section-title">► Your Crochet Pattern</h2>
+      <section class="pattern-display">
+        <div id="pattern" class="pattern-text"></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Updates Section -->
+  <div class="updates-section">
+    <p><strong>Updates for: </strong> <span id="update-date"></span></p>
+    <p>Thank you all for showing interest in this project! Next updates:</p>
+    <ul>
+      <li>Small improvements based on TikTok feedback.</li>
+      <li>Add translations to different languages functionality.</li>
+    </ul>
+
+    <!-- Add followers' suggestions -->
+    <p><strong>Follower suggestions:</strong></p>
+    <ul>
+      <li>Add confirmation message before clearing the entire pattern. (Suggested by @Cinna the Mini Dachshund)</li>
+      <li>Allow the ability to repeat multiple rounds with custom text, for example, "Row 12-17". (Suggested by @nieqai)</li>
+      <li>Enable functionality to add custom rows/stitches that can't be done with buttons. (Suggested by @nieqai)</li>
+      <li>Option to increase by 3 stitches followed by an increase, or alternate increases. (Suggested by @Papillion_noir)</li>
+      <li>Add skipping stitches and chains. (Suggested by @Marie Elise Jensen D)</li>
+      <li>Make a phone-friendly version for mobile users. (Suggested by @Chef Raquela)</li>
+    </ul>
+
+    <p>Found any issues or want to tell me how to improve? Send me a message on my 
+      <a href="https://www.tiktok.com/@knottycreationsbyisa" target="_blank">TikTok</a> 
+      or DM me on 
+      <a href="https://www.instagram.com/knottycreationsbyisa" target="_blank">Instagram</a>
+    </p>
+    <p><strong>Last updated:</strong> <span id="last-update-date"></span></p>
+    <p>This app is still improving based on your feedback, so stay tuned for new features!</p>
   </div>
 
   <!-- Etsy Shop Link -->
