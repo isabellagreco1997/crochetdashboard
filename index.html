@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KnottyCreations | Crochet Pattern Generator Dashboard</title>
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&family=Open+Sans:wght@400;600&display=swap">
   <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
@@ -28,35 +28,104 @@
     <div class="section-wrapper">
       <h2 class="section-title">► Control Panel</h2>
       <section class="control-panel">
-        <!-- Control Panel Content -->
-        
-        <label for="magic-ring-input">Magic Ring (stitches):</label>
-        <input type="number" id="magic-ring-input" value="6" min="1" />
-        <button id="start-magic-ring"><i class="fas fa-play"></i> Start Magic Ring</button>
-
-        <label for="crochet-stitch">Choose Crochet Stitch:</label>
-        <select id="crochet-stitch">
-          <option value="sc">Single crochet (sc) - the most basic stitch used in amigurumi</option>
-          <option value="hdc">Half double crochet (hdc)</option>
-          <option value="dc">Double crochet (dc)</option>
-          <option value="sl st">Slip stitch (sl st)</option>
-          <option value="tc">Triple crochet (tc)</option>
-          <option value="bobble">Bobble stitch</option>
-          <option value="popcorn">Popcorn stitch</option>
+        <!-- New Dropdown to Select Starting Method -->
+        <label for="starting-method">Choose Starting Method:</label>
+        <select id="starting-method">
+          <option value="magic-ring">Magic Ring</option>
+          <option value="chain">Chain (under construction)</option>
+          <option value="custom-round">Custom Round Builder (under construction)</option>
         </select>
 
-        <div class="button-group">
-          <button id="add-increase"><i class="fas fa-plus-circle"></i> Add Increase</button>
-          <button id="add-decrease"><i class="fas fa-minus-circle"></i> Add Decrease</button>
-          <button id="repeat-round"><i class="fas fa-redo"></i> Repeat Last Round</button>
-          <button id="delete-last-round"><i class="fas fa-trash-alt"></i> Delete Last Round</button>
-          <button id="fasten-off"><i class="fas fa-cut"></i> Fasten Off</button>
-          <button id="clear-pattern"><i class="fas fa-broom"></i> Clear Entire Pattern</button>
+        <!-- Magic Ring Controls -->
+        <div id="magic-ring-controls">
+          <label for="magic-ring-input">Magic Ring (stitches):</label>
+          <input type="number" id="magic-ring-input" value="6" min="1" />
+          <button id="start-magic-ring"><i class="fas fa-play"></i> Start Magic Ring</button>
+
+          <label for="crochet-stitch">Choose Crochet Stitch:</label>
+          <select id="crochet-stitch">
+            <option value="sc">Single crochet (sc)</option>
+            <option value="hdc">Half double crochet (hdc)</option>
+            <option value="dc">Double crochet (dc)</option>
+            <option value="sl st">Slip stitch (sl st)</option>
+            <option value="tc">Triple crochet (tc)</option>
+            <option value="bobble">Bobble stitch</option>
+            <option value="popcorn">Popcorn stitch</option>
+          </select>
+
+          <div class="button-group">
+            <button id="add-increase"><i class="fas fa-plus-circle"></i> Add Increase</button>
+            <button id="add-decrease"><i class="fas fa-minus-circle"></i> Add Decrease</button>
+            <button id="repeat-round"><i class="fas fa-redo"></i> Repeat Last Round</button>
+            <button id="delete-last-round"><i class="fas fa-trash-alt"></i> Delete Last Round</button>
+            <button id="fasten-off"><i class="fas fa-cut"></i> Fasten Off</button>
+            <button id="clear-pattern"><i class="fas fa-broom"></i> Clear Entire Pattern</button>
+          </div>
+
+          <!-- Custom Round Builder within Magic Ring Controls -->
+          <label for="magic-ring-custom-instruction">Enter Custom Round Instruction:</label>
+          <textarea id="magic-ring-custom-instruction" rows="3" placeholder="E.g., 10 inc, then sc in next 10 sts."></textarea>
+          
+          <!-- Input for total stitches after custom round -->
+          <label for="magic-ring-custom-total-stitches">Total Stitches after this round:</label>
+          <input type="number" id="magic-ring-custom-total-stitches" min="1" />
+
+          <!-- Explanatory text -->
+          <p id="custom-round-explanation">Note: The Increase, Decrease, and Repeat buttons will be disabled until you specify the total stitch count for the custom round.</p>
+
+          <button id="add-magic-ring-custom"><i class="fas fa-plus-circle"></i> Add Custom Round</button>
+
+          <div class="yarn-group">
+            <label for="yarn-color">Choose yarn color:</label>
+            <select id="yarn-color">
+                    <option value="Color A">Color A</option>
+                    <option value="Color B">Color B</option>
+                    <option value="Color C">Color C</option>
+                    <option value="Color D">Color D</option>
+                    <option value="Color E">Color E</option>
+                    <option value="Red">Red</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Green">Green</option>
+                    <option value="Yellow">Yellow</option>
+                    <option value="Purple">Purple</option>
+                    <option value="Pink">Pink</option>
+                    <option value="White">White</option>
+                    <option value="Black">Black</option>
+                    <option value="Orange">Orange</option>
+                    <option value="Teal">Teal</option>
+                    <option value="Brown">Brown</option>
+                    <option value="Magenta">Magenta</option>
+                    <option value="Lavender">Lavender</option>
+                    <option value="Gray">Gray</option>
+                    <option value="Gold">Gold</option>
+                    <option value="Silver">Silver</option>
+            </select>
+            <button id="add-yarn-color"><i class="fas fa-palette"></i> Add Yarn Color</button>
+          </div>
         </div>
 
-        <div class="yarn-group">
-          <label for="yarn-color">Choose yarn color:</label>
-          <select id="yarn-color">
+        <!-- Chain Controls -->
+        <div id="chain-controls" style="display: none;">
+          <!-- Chain Starting Options -->
+          <label for="chain-length">Chain Length:</label>
+          <input type="number" id="chain-length" value="10" min="1" />
+          <button id="start-chain"><i class="fas fa-play"></i> Start Chain</button>
+
+          <!-- Custom Instructions for Rows -->
+          <label for="chain-custom-instruction">Enter Row Instructions:</label>
+          <textarea id="chain-custom-instruction" rows="3" placeholder="E.g., Row 1: In the second CH from hook, SC in each chain across (25 SC). CH 1, turn."></textarea>
+          <button id="add-chain-instruction"><i class="fas fa-plus-circle"></i> Add to Pattern</button>
+
+          <div class="button-group">
+            <button id="delete-last-row-chain"><i class="fas fa-trash-alt"></i> Delete Last Entry</button>
+            <button id="clear-pattern-chain"><i class="fas fa-broom"></i> Clear Entire Pattern</button>
+            <button id="fasten-off-chain"><i class="fas fa-cut"></i> Fasten Off</button>
+          </div>
+
+          <div class="yarn-group">
+            <label for="yarn-color-chain">Choose yarn color:</label>
+            <select id="yarn-color-chain">
+              <!-- Same options as before -->
               <option value="Color A">Color A</option>
               <option value="Color B">Color B</option>
               <option value="Color C">Color C</option>
@@ -78,8 +147,47 @@
               <option value="Gray">Gray</option>
               <option value="Gold">Gold</option>
               <option value="Silver">Silver</option>
-          </select>
-          <button id="add-yarn-color"><i class="fas fa-palette"></i> Add Yarn Color</button>
+            </select>
+            <button id="add-yarn-color-chain"><i class="fas fa-palette"></i> Add Yarn Color</button>
+          </div>
+        </div>
+
+        <!-- Custom Round Builder Controls -->
+        <div id="custom-round-controls" style="display: none;">
+          <label for="custom-round-input">Enter Custom Instruction:</label>
+          <textarea id="custom-round-input" rows="3" placeholder="E.g., Round 5: [2 sc, inc] repeat around."></textarea>
+          <button id="add-custom-round"><i class="fas fa-plus-circle"></i> Add to Pattern</button>
+          <button id="delete-last-custom"><i class="fas fa-trash-alt"></i> Delete Last Entry</button>
+          <button id="clear-pattern-custom"><i class="fas fa-broom"></i> Clear Entire Pattern</button>
+
+          <div class="yarn-group">
+            <label for="yarn-color-custom">Choose yarn color:</label>
+            <select id="yarn-color-custom">
+              <!-- Same options as before -->
+              <option value="Color A">Color A</option>
+              <option value="Color B">Color B</option>
+              <option value="Color C">Color C</option>
+              <option value="Color D">Color D</option>
+              <option value="Color E">Color E</option>
+              <option value="Red">Red</option>
+              <option value="Blue">Blue</option>
+              <option value="Green">Green</option>
+              <option value="Yellow">Yellow</option>
+              <option value="Purple">Purple</option>
+              <option value="Pink">Pink</option>
+              <option value="White">White</option>
+              <option value="Black">Black</option>
+              <option value="Orange">Orange</option>
+              <option value="Teal">Teal</option>
+              <option value="Brown">Brown</option>
+              <option value="Magenta">Magenta</option>
+              <option value="Lavender">Lavender</option>
+              <option value="Gray">Gray</option>
+              <option value="Gold">Gold</option>
+              <option value="Silver">Silver</option>
+            </select>
+            <button id="add-yarn-color-custom"><i class="fas fa-palette"></i> Add Yarn Color</button>
+          </div>
         </div>
       </section>
     </div>
@@ -93,7 +201,6 @@
     </div>
   </div>
 
-  <!-- Updates Section -->
   <div class="updates-section">
     <p><strong>Updates for: </strong> <span id="update-date"></span></p>
     <p>Thank you all for showing interest in this project! Next updates:</p>
@@ -121,6 +228,7 @@
     <p><strong>Last updated:</strong> <span id="last-update-date"></span></p>
     <p>This app is still improving based on your feedback, so stay tuned for new features!</p>
   </div>
+
 
   <!-- Etsy Shop Link -->
   <footer>

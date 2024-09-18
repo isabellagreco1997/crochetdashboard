@@ -1,18 +1,18 @@
 let currentRound = 1;
-let lastRoundPattern = "";
 let pattern = [];
-let repeatCount = 0;
-let repeatStartRound = null;
-let lastIncreaseBase = 3;
-let totalStitches = 6;
-let repeatInProgress = false;
+let totalStitches = 0;
+let isChainStarted = false;
+let increaseInterval = 0;
+let initialStitches = 6; // Will be set when starting the magic ring
 
 const startMagicRingButton = document.getElementById('start-magic-ring');
 const decreaseButton = document.getElementById('add-decrease');
+const increaseButton = document.getElementById('add-increase');
+const repeatButton = document.getElementById('repeat-round');
 
 // Function to get the selected stitch from the dropdown
-function getSelectedStitch() {
-  const stitchDropdown = document.getElementById('crochet-stitch');
+function getSelectedStitch(dropdownId) {
+  const stitchDropdown = document.getElementById(dropdownId);
   return stitchDropdown.options[stitchDropdown.selectedIndex].value;  // Return the selected stitch abbreviation
 }
 
@@ -21,184 +21,416 @@ window.addEventListener('load', () => {
   const savedPattern = localStorage.getItem('crochetPattern');
   const savedCurrentRound = localStorage.getItem('currentRound');
   const savedTotalStitches = localStorage.getItem('totalStitches');
-  
+  const savedStartingMethod = localStorage.getItem('startingMethod');
+  const savedIncreaseInterval = localStorage.getItem('increaseInterval');
+  const savedInitialStitches = localStorage.getItem('initialStitches');
+
   if (savedPattern) {
     pattern = JSON.parse(savedPattern);
     currentRound = savedCurrentRound ? parseInt(savedCurrentRound) : 1;
-    totalStitches = savedTotalStitches ? parseInt(savedTotalStitches) : 6;
+    totalStitches = savedTotalStitches ? parseInt(savedTotalStitches) : 0;
+    increaseInterval = savedIncreaseInterval ? parseInt(savedIncreaseInterval) : 0;
+    initialStitches = savedInitialStitches ? parseInt(savedInitialStitches) : 6;
     updatePatternDisplay();
   }
 
-  // Check if the magic ring is already in the pattern
+  // Set the starting method if saved
+  if (savedStartingMethod) {
+    document.getElementById('starting-method').value = savedStartingMethod;
+    document.getElementById('starting-method').dispatchEvent(new Event('change'));
+  }
+
+  // Disable the magic ring button if already started
   if (pattern.some(p => p.includes("Magic ring"))) {
     startMagicRingButton.disabled = true;
     startMagicRingButton.classList.add('disabled');
   }
 
-  // Disable the decrease button if total stitches is 6 or less
+  // Disable the chain button if already started
+  if (pattern.some(p => p.includes("Chain"))) {
+    isChainStarted = true;
+    document.getElementById('start-chain').disabled = true;
+    document.getElementById('start-chain').classList.add('disabled');
+  }
+
+  // Update button states
   updateButtonStates();
 });
 
+// Event listener for the starting method selection
+document.getElementById('starting-method').addEventListener('change', function() {
+  const selectedMethod = this.value;
+  localStorage.setItem('startingMethod', selectedMethod);
+
+  // Hide all controls
+  document.getElementById('magic-ring-controls').style.display = 'none';
+  document.getElementById('chain-controls').style.display = 'none';
+  document.getElementById('custom-round-controls').style.display = 'none';
+
+  // Show the selected controls
+  if (selectedMethod === 'magic-ring') {
+    document.getElementById('magic-ring-controls').style.display = 'block';
+  } else if (selectedMethod === 'chain') {
+    document.getElementById('chain-controls').style.display = 'block';
+  } else if (selectedMethod === 'custom-round') {
+    document.getElementById('custom-round-controls').style.display = 'block';
+  }
+});
+
+// -------------- Magic Ring Controls --------------
+
 startMagicRingButton.addEventListener('click', () => {
-  const magicRingStitches = document.getElementById('magic-ring-input').value;
-  totalStitches = parseInt(magicRingStitches); // Set initial stitch count
+  const magicRingStitches = parseInt(document.getElementById('magic-ring-input').value);
+  totalStitches = magicRingStitches;
+  initialStitches = magicRingStitches; // Set initial stitches for future increases
+  increaseInterval = 0; // Reset increase interval
   const startPattern = `Round 1: Magic ring with ${magicRingStitches} stitches. (${totalStitches} sts)`;
   pattern.push(startPattern);
-  lastRoundPattern = startPattern;
-  lastIncreaseBase = 1;
-  repeatCount = 0;
-  repeatInProgress = false;
   currentRound++;
-  
+
   // Disable the magic ring button and add disabled class for visual cue
   startMagicRingButton.disabled = true;
   startMagicRingButton.classList.add('disabled');
-  
+
   savePattern(); // Save the pattern to localStorage
   updatePatternDisplay();
+
+  updateButtonStates();
 });
 
 document.getElementById('add-increase').addEventListener('click', () => {
-  const selectedStitch = getSelectedStitch();  // Get the selected stitch
-  totalStitches += Math.floor(totalStitches / lastIncreaseBase); // Calculate total stitches after increase
-
-  let increasePattern;
-  if (selectedStitch !== 'sc') {
-    // If it's not single crochet, add a note about the increase
-    increasePattern = `Round ${currentRound}: 1 ${selectedStitch} in each of the next ${lastIncreaseBase} stitches, INC using ${selectedStitch}. (${totalStitches} sts)`;
-  } else {
-    increasePattern = `Round ${currentRound}: 1 ${selectedStitch} in each of the next ${lastIncreaseBase} stitches, INC. (${totalStitches} sts)`;
+  if (totalStitches < 1) {
+    alert("Cannot increase stitches because total stitches are less than 1.");
+    return;
   }
-  
-  pattern.push(increasePattern);
-  lastRoundPattern = increasePattern;
-  lastIncreaseBase++;
-  repeatCount = 0;
-  repeatInProgress = false;
+
+  const selectedStitch = getSelectedStitch('crochet-stitch');  // Get the selected stitch
+
+  let patternText = '';
+  if (increaseInterval === 0) {
+    // First increase round after magic ring
+    patternText = `Round ${currentRound}: Inc in each stitch around using ${selectedStitch}. (${totalStitches + initialStitches} sts)`;
+  } else {
+    // Subsequent increase rounds
+    patternText = `Round ${currentRound}: *1 ${selectedStitch} in each of next ${increaseInterval} sts, inc in next st*, repeat around. (${totalStitches + initialStitches} sts)`;
+  }
+
+  totalStitches += initialStitches; // Increase total stitches by initialStitches
+  increaseInterval++; // Increase the interval between increases
+  pattern.push(patternText);
   currentRound++;
-  
-  savePattern(); // Save the pattern to localStorage
+
+  savePattern();
   updatePatternDisplay();
 
-  // Update button states after adding increase
   updateButtonStates();
 });
 
 decreaseButton.addEventListener('click', () => {
-  const selectedStitch = getSelectedStitch();  // Get the selected stitch
-  if (totalStitches > 6) {
-    if (totalStitches === 12) {
-      totalStitches = 6; // Reduce to 6 after full DEC
-      const decreasePattern = `Round ${currentRound}: 6 DEC using ${selectedStitch}. (${totalStitches} sts)`;
-      pattern.push(decreasePattern);
+  const selectedStitch = getSelectedStitch('crochet-stitch');  // Get the selected stitch
+  if (totalStitches > initialStitches) {
+    increaseInterval--; // Decrease the interval between decreases
+    if (increaseInterval < 0) increaseInterval = 0;
+
+    totalStitches -= initialStitches; // Decrease total stitches by initialStitches
+
+    let patternText = '';
+    if (increaseInterval === 0) {
+      patternText = `Round ${currentRound}: Dec in each stitch around using ${selectedStitch}. (${totalStitches} sts)`;
     } else {
-      totalStitches -= Math.floor(totalStitches / lastIncreaseBase); // Calculate total stitches after decrease
-      const decreasePattern = `Round ${currentRound}: 1 ${selectedStitch} in each of the next ${lastIncreaseBase - 1} stitches, DEC. (${totalStitches} sts)`;
-      pattern.push(decreasePattern);
+      patternText = `Round ${currentRound}: *1 ${selectedStitch} in each of next ${increaseInterval} sts, dec over next 2 sts*, repeat around. (${totalStitches} sts)`;
     }
-    lastRoundPattern = pattern[pattern.length - 1];
-    lastIncreaseBase = Math.max(lastIncreaseBase - 1, 1);
-    repeatCount = 0;
-    repeatInProgress = false;
+
+    pattern.push(patternText);
     currentRound++;
-    
-    savePattern(); // Save the pattern to localStorage
+
+    savePattern();
     updatePatternDisplay();
-    
-    // Update button states after decreasing
+
     updateButtonStates();
   }
 });
 
 document.getElementById('repeat-round').addEventListener('click', () => {
-  const selectedStitch = getSelectedStitch();  // Get the selected stitch
-  if (!repeatInProgress) {
-    repeatStartRound = currentRound;
-    repeatInProgress = true;
-    pattern.push(`Round ${currentRound}: 1 ${selectedStitch} in each stitch. (${totalStitches} sts)`);
-  } else {
-    repeatCount++;
-    pattern.pop();
-    const repeatPattern = `Round ${repeatStartRound}-${currentRound}: 1 ${selectedStitch} in each stitch. (${totalStitches} sts)`;
-    pattern.push(repeatPattern);
+  if (totalStitches <= 0) {
+    alert("Cannot repeat round because total stitches are less than or equal to 0.");
+    return;
   }
+  const selectedStitch = getSelectedStitch('crochet-stitch');  // Get the selected stitch
+  const repeatPattern = `Round ${currentRound}: 1 ${selectedStitch} in each stitch. (${totalStitches} sts)`;
+  pattern.push(repeatPattern);
   currentRound++;
-  
+
   savePattern(); // Save the pattern to localStorage
   updatePatternDisplay();
 });
 
 document.getElementById('delete-last-round').addEventListener('click', () => {
   if (pattern.length > 0) {
-    pattern.pop();
+    const lastEntry = pattern.pop();
     currentRound--;
-    
-    savePattern(); // Save the updated pattern to localStorage
+
+    // Adjust totalStitches and increaseInterval if necessary
+    if (lastEntry.includes('Inc in each stitch around')) {
+      totalStitches -= initialStitches;
+      increaseInterval = Math.max(0, increaseInterval - 1);
+    } else if (lastEntry.includes('inc in next st')) {
+      totalStitches -= initialStitches;
+      increaseInterval = Math.max(0, increaseInterval - 1);
+    } else if (lastEntry.includes('Dec in each stitch around')) {
+      totalStitches += initialStitches;
+      increaseInterval++;
+    } else if (lastEntry.includes('dec over next 2 sts')) {
+      totalStitches += initialStitches;
+      increaseInterval++;
+    } else if (lastEntry.includes('(') && lastEntry.includes('sts)')) {
+      // Extract total stitches from the last entry if possible
+      const matches = lastEntry.match(/\((\d+)\s*sts\)/);
+      if (matches && matches[1]) {
+        totalStitches = parseInt(matches[1]);
+      }
+    }
+
+    savePattern();
     updatePatternDisplay();
+
+    updateButtonStates();
   }
 });
 
 document.getElementById('fasten-off').addEventListener('click', () => {
   const fastenOffPattern = "Fasten off and leave a long tail.";
   pattern.push(fastenOffPattern);
-  
+
   savePattern(); // Save the pattern to localStorage
   updatePatternDisplay();
 });
 
-document.getElementById('add-yarn-color').addEventListener('click', () => {
-    const yarnColor = document.getElementById('yarn-color').value;
-  
-    // Check if the selected color starts with "Color" and handle accordingly
-    let colorPattern;
-    if (yarnColor.startsWith("Color")) {
-      colorPattern = `With ${yarnColor}.`; // Do not add "yarn" for Color A, B, C, etc.
-    } else {
-      colorPattern = `With ${yarnColor} yarn.`; // Add "yarn" for regular color names
-    }
-    
-    pattern.push(colorPattern);
-    
-    savePattern(); // Save the pattern to localStorage
-    updatePatternDisplay();
-  });
-  
-
 document.getElementById('clear-pattern').addEventListener('click', () => {
-  pattern = [];
-  currentRound = 1;
-  totalStitches = 6;
+  if (confirm("Are you sure you want to clear the entire pattern?")) {
+    pattern = [];
+    currentRound = 1;
+    totalStitches = 0;
+    increaseInterval = 0;
+    initialStitches = 6;
 
-  // Re-enable the magic ring button and reset its style
-  startMagicRingButton.disabled = false;
-  startMagicRingButton.classList.remove('disabled');
-  
-  savePattern(); // Save the cleared pattern to localStorage
+    // Re-enable the magic ring button and reset its style
+    startMagicRingButton.disabled = false;
+    startMagicRingButton.classList.remove('disabled');
+
+    savePattern(); // Save the cleared pattern to localStorage
+    updatePatternDisplay();
+
+    updateButtonStates();
+  }
+});
+
+document.getElementById('add-yarn-color').addEventListener('click', () => {
+  const yarnColor = document.getElementById('yarn-color').value;
+  let colorPattern = yarnColor.startsWith("Color") ? `With ${yarnColor}.` : `With ${yarnColor} yarn.`;
+  pattern.push(colorPattern);
+  savePattern();
   updatePatternDisplay();
 });
 
-// Function to update button states based on the number of stitches
+// Add custom round in Magic Ring
+document.getElementById('add-magic-ring-custom').addEventListener('click', () => {
+  const customInstruction = document.getElementById('magic-ring-custom-instruction').value.trim();
+  const customTotalStitches = parseInt(document.getElementById('magic-ring-custom-total-stitches').value);
+
+  if (customInstruction && customTotalStitches > 0) {
+    pattern.push(`Round ${currentRound}: ${customInstruction} (${customTotalStitches} sts)`);
+    currentRound++;
+    totalStitches = customTotalStitches;
+
+    document.getElementById('magic-ring-custom-instruction').value = '';
+    document.getElementById('magic-ring-custom-total-stitches').value = '';
+
+    // Re-enable the buttons now that total stitches are specified
+    updateButtonStates();
+
+    savePattern();
+    updatePatternDisplay();
+  } else {
+    alert("Please enter a custom instruction and specify the total stitches after this round.");
+  }
+});
+
+// Disable buttons when typing in custom instruction
+document.getElementById('magic-ring-custom-instruction').addEventListener('input', () => {
+  const customInstruction = document.getElementById('magic-ring-custom-instruction').value.trim();
+
+  if (customInstruction.length > 0) {
+    // Disable Increase, Decrease, and Repeat buttons
+    increaseButton.disabled = true;
+    increaseButton.classList.add('disabled');
+
+    decreaseButton.disabled = true;
+    decreaseButton.classList.add('disabled');
+
+    repeatButton.disabled = true;
+    repeatButton.classList.add('disabled');
+  } else {
+    // Re-enable buttons based on totalStitches
+    updateButtonStates();
+  }
+});
+
+// -------------- Chain Controls --------------
+
+document.getElementById('start-chain').addEventListener('click', () => {
+  const chainLength = document.getElementById('chain-length').value;
+  const startPattern = `Chain ${chainLength}.`;
+  pattern.push(startPattern);
+  totalStitches = parseInt(chainLength);
+  isChainStarted = true;
+
+  // Disable the chain button
+  document.getElementById('start-chain').disabled = true;
+  document.getElementById('start-chain').classList.add('disabled');
+
+  savePattern();
+  updatePatternDisplay();
+});
+
+document.getElementById('add-chain-instruction').addEventListener('click', () => {
+  const customInstruction = document.getElementById('chain-custom-instruction').value.trim();
+  if (customInstruction) {
+    pattern.push(customInstruction);
+    currentRound++;
+    document.getElementById('chain-custom-instruction').value = '';
+
+    savePattern();
+    updatePatternDisplay();
+  }
+});
+
+document.getElementById('delete-last-row-chain').addEventListener('click', () => {
+  if (pattern.length > 0) {
+    pattern.pop();
+    currentRound = Math.max(1, currentRound - 1);
+    savePattern();
+    updatePatternDisplay();
+  }
+});
+
+document.getElementById('fasten-off-chain').addEventListener('click', () => {
+  const fastenOffPattern = "Fasten off and weave in ends.";
+  pattern.push(fastenOffPattern);
+
+  savePattern();
+  updatePatternDisplay();
+});
+
+document.getElementById('clear-pattern-chain').addEventListener('click', () => {
+  if (confirm("Are you sure you want to clear the entire pattern?")) {
+    pattern = [];
+    currentRound = 1;
+    totalStitches = 0;
+    isChainStarted = false;
+
+    // Re-enable the chain button
+    document.getElementById('start-chain').disabled = false;
+    document.getElementById('start-chain').classList.remove('disabled');
+
+    savePattern();
+    updatePatternDisplay();
+  }
+});
+
+document.getElementById('add-yarn-color-chain').addEventListener('click', () => {
+  const yarnColor = document.getElementById('yarn-color-chain').value;
+  let colorPattern = yarnColor.startsWith("Color") ? `With ${yarnColor}.` : `With ${yarnColor} yarn.`;
+  pattern.push(colorPattern);
+  savePattern();
+  updatePatternDisplay();
+});
+
+// -------------- Custom Round Builder Controls --------------
+
+document.getElementById('add-custom-round').addEventListener('click', () => {
+  const customInstruction = document.getElementById('custom-round-input').value.trim();
+  if (customInstruction) {
+    pattern.push(customInstruction);
+    currentRound++;
+    document.getElementById('custom-round-input').value = '';
+
+    savePattern();
+    updatePatternDisplay();
+  }
+});
+
+document.getElementById('delete-last-custom').addEventListener('click', () => {
+  if (pattern.length > 0) {
+    pattern.pop();
+    currentRound = Math.max(1, currentRound - 1);
+    savePattern();
+    updatePatternDisplay();
+  }
+});
+
+document.getElementById('clear-pattern-custom').addEventListener('click', () => {
+  if (confirm("Are you sure you want to clear the entire pattern?")) {
+    pattern = [];
+    currentRound = 1;
+    totalStitches = 0;
+
+    savePattern();
+    updatePatternDisplay();
+  }
+});
+
+document.getElementById('add-yarn-color-custom').addEventListener('click', () => {
+  const yarnColor = document.getElementById('yarn-color-custom').value;
+  let colorPattern = yarnColor.startsWith("Color") ? `With ${yarnColor}.` : `With ${yarnColor} yarn.`;
+  pattern.push(colorPattern);
+  savePattern();
+  updatePatternDisplay();
+});
+
+// -------------- Common Functions --------------
+
 function updateButtonStates() {
-  if (totalStitches <= 6) {
+  // Disable Increase button if totalStitches < 1
+  if (totalStitches < 1) {
+    increaseButton.disabled = true;
+    increaseButton.classList.add('disabled');
+  } else {
+    increaseButton.disabled = false;
+    increaseButton.classList.remove('disabled');
+  }
+
+  // Disable Decrease button if totalStitches <= initialStitches or totalStitches <= 0
+  if (totalStitches <= initialStitches || totalStitches <= 0 || !pattern.some(p => p.includes("Round"))) {
     decreaseButton.disabled = true;
     decreaseButton.classList.add('disabled');
   } else {
     decreaseButton.disabled = false;
     decreaseButton.classList.remove('disabled');
   }
+
+  // Disable Repeat button if totalStitches <= 0
+  if (totalStitches <= 0) {
+    repeatButton.disabled = true;
+    repeatButton.classList.add('disabled');
+  } else {
+    repeatButton.disabled = false;
+    repeatButton.classList.remove('disabled');
+  }
 }
 
 function updatePatternDisplay() {
   const formattedPattern = pattern.map((line) => {
-    const updatedLine = line.replace(/(Round (\d+)(-\d+)?:)/, (match) => `<b>${match}</b>`);
+    const updatedLine = line.replace(/(Round|Row) (\d+)(-\d+)?:/, (match) => `<b>${match}</b>`);
     return updatedLine;
   }).join('<br>');
   document.getElementById('pattern').innerHTML = formattedPattern;
 }
 
-// Save the pattern to localStorage
 function savePattern() {
   localStorage.setItem('crochetPattern', JSON.stringify(pattern));
   localStorage.setItem('currentRound', currentRound);
   localStorage.setItem('totalStitches', totalStitches);
+  localStorage.setItem('increaseInterval', increaseInterval);
+  localStorage.setItem('initialStitches', initialStitches);
 }

@@ -76,13 +76,18 @@ header {
     max-width: 100%;
 }
 
-input[type="number"], select {
+input[type="number"], select, textarea {
     width: 100%;
     padding: 8px;
     margin: 10px 0;
     border: 2px solid #ddd;
     border-radius: 12px;
     background-color: #fff;
+    font-family: inherit;
+}
+
+textarea {
+    resize: vertical;
 }
 
 button {
@@ -122,6 +127,26 @@ button:hover {
 
 .yarn-group select {
     margin-bottom: 10px;
+}
+
+/* Additional CSS for starting method dropdown */
+.control-panel label[for="starting-method"] {
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+#starting-method {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    background-color: #fff;
+}
+
+/* Optional: Add some spacing between control sections */
+.control-panel > div {
+    margin-top: 20px;
 }
 
 /* Pattern Display */
@@ -300,7 +325,7 @@ footer p {
         padding: 8px 12px;
     }
 
-    input[type="number"], select {
+    input[type="number"], select, textarea {
         font-size: 14px;
     }
 
@@ -315,4 +340,10 @@ footer p {
     .main-title {
         font-size: 20px;
     }
+}
+
+#custom-round-explanation {
+    font-size: 14px;
+    color: #d9534f; /* Bootstrap's red color for warnings */
+    margin-top: 5px;
 }
