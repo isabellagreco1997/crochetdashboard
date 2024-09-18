@@ -10,6 +10,12 @@ let repeatInProgress = false;
 const startMagicRingButton = document.getElementById('start-magic-ring');
 const decreaseButton = document.getElementById('add-decrease');
 
+// Function to get the selected stitch from the dropdown
+function getSelectedStitch() {
+  const stitchDropdown = document.getElementById('crochet-stitch');
+  return stitchDropdown.options[stitchDropdown.selectedIndex].value;  // Return the selected stitch abbreviation
+}
+
 // Load the saved pattern from localStorage when the page loads
 window.addEventListener('load', () => {
   const savedPattern = localStorage.getItem('crochetPattern');
@@ -53,8 +59,17 @@ startMagicRingButton.addEventListener('click', () => {
 });
 
 document.getElementById('add-increase').addEventListener('click', () => {
+  const selectedStitch = getSelectedStitch();  // Get the selected stitch
   totalStitches += Math.floor(totalStitches / lastIncreaseBase); // Calculate total stitches after increase
-  const increasePattern = `Round ${currentRound}: 1 sc in each of the next ${lastIncreaseBase} stitches, INC. (${totalStitches} sts)`;
+
+  let increasePattern;
+  if (selectedStitch !== 'sc') {
+    // If it's not single crochet, add a note about the increase
+    increasePattern = `Round ${currentRound}: 1 ${selectedStitch} in each of the next ${lastIncreaseBase} stitches, INC using ${selectedStitch}. (${totalStitches} sts)`;
+  } else {
+    increasePattern = `Round ${currentRound}: 1 ${selectedStitch} in each of the next ${lastIncreaseBase} stitches, INC. (${totalStitches} sts)`;
+  }
+  
   pattern.push(increasePattern);
   lastRoundPattern = increasePattern;
   lastIncreaseBase++;
@@ -70,14 +85,15 @@ document.getElementById('add-increase').addEventListener('click', () => {
 });
 
 decreaseButton.addEventListener('click', () => {
+  const selectedStitch = getSelectedStitch();  // Get the selected stitch
   if (totalStitches > 6) {
     if (totalStitches === 12) {
       totalStitches = 6; // Reduce to 6 after full DEC
-      const decreasePattern = `Round ${currentRound}: 6 DEC. (${totalStitches} sts)`;
+      const decreasePattern = `Round ${currentRound}: 6 DEC using ${selectedStitch}. (${totalStitches} sts)`;
       pattern.push(decreasePattern);
     } else {
       totalStitches -= Math.floor(totalStitches / lastIncreaseBase); // Calculate total stitches after decrease
-      const decreasePattern = `Round ${currentRound}: 1 sc in each of the next ${lastIncreaseBase - 1} stitches, DEC. (${totalStitches} sts)`;
+      const decreasePattern = `Round ${currentRound}: 1 ${selectedStitch} in each of the next ${lastIncreaseBase - 1} stitches, DEC. (${totalStitches} sts)`;
       pattern.push(decreasePattern);
     }
     lastRoundPattern = pattern[pattern.length - 1];
@@ -95,14 +111,15 @@ decreaseButton.addEventListener('click', () => {
 });
 
 document.getElementById('repeat-round').addEventListener('click', () => {
+  const selectedStitch = getSelectedStitch();  // Get the selected stitch
   if (!repeatInProgress) {
     repeatStartRound = currentRound;
     repeatInProgress = true;
-    pattern.push(`Round ${currentRound}: 1 sc in each stitch. (${totalStitches} sts)`);
+    pattern.push(`Round ${currentRound}: 1 ${selectedStitch} in each stitch. (${totalStitches} sts)`);
   } else {
     repeatCount++;
     pattern.pop();
-    const repeatPattern = `Round ${repeatStartRound}-${currentRound}: 1 sc in each stitch. (${totalStitches} sts)`;
+    const repeatPattern = `Round ${repeatStartRound}-${currentRound}: 1 ${selectedStitch} in each stitch. (${totalStitches} sts)`;
     pattern.push(repeatPattern);
   }
   currentRound++;
@@ -130,13 +147,22 @@ document.getElementById('fasten-off').addEventListener('click', () => {
 });
 
 document.getElementById('add-yarn-color').addEventListener('click', () => {
-  const yarnColor = document.getElementById('yarn-color').value;
-  const colorPattern = `With ${yarnColor} yarn.`;
-  pattern.push(colorPattern);
+    const yarnColor = document.getElementById('yarn-color').value;
   
-  savePattern(); // Save the pattern to localStorage
-  updatePatternDisplay();
-});
+    // Check if the selected color starts with "Color" and handle accordingly
+    let colorPattern;
+    if (yarnColor.startsWith("Color")) {
+      colorPattern = `With ${yarnColor}.`; // Do not add "yarn" for Color A, B, C, etc.
+    } else {
+      colorPattern = `With ${yarnColor} yarn.`; // Add "yarn" for regular color names
+    }
+    
+    pattern.push(colorPattern);
+    
+    savePattern(); // Save the pattern to localStorage
+    updatePatternDisplay();
+  });
+  
 
 document.getElementById('clear-pattern').addEventListener('click', () => {
   pattern = [];

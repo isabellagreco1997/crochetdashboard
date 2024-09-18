@@ -23,7 +23,7 @@ header {
 }
 
 .logo {
-    width: 200px; /* Adjust the size of your logo */
+    width: 300px; /* Adjust the size of your logo */
     height: auto;
     margin-right: 15px;
 }
@@ -39,7 +39,7 @@ header h1 {
     display: grid;
     grid-template-columns: 1fr 2fr; /* Two columns: Control Panel | Pattern Display */
     gap: 20px;
-    padding: 40px;
+    padding: 20px 40px;
     max-width: 1200px;
     margin: 40px auto;
 }
@@ -109,6 +109,24 @@ select {
 }
 
 /* Pattern Display */
+
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;  /* Two columns: Control Panel | Pattern Display */
+    gap: 20px;
+    padding: 10px 40px;
+    max-width: 1200px;
+    margin: 0 auto;                  /* Ensure it's centered */
+}
+
+/* Adjust the control panel and pattern display layout */
+.control-panel {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
 .pattern-display {
     background: #fff;
     padding: 20px;
@@ -129,7 +147,7 @@ select {
     border: 2px solid #ddd;
     font-family: monospace;
     font-size: 14px;
-    height: 300px;
+    height: 85%;
     overflow-y: auto;
     white-space: pre-wrap;
 }
@@ -148,28 +166,28 @@ footer {
     text-align: center;
     border-top: 1px solid #ddd;
     margin-top: 40px;
-  }
+}
   
-  .footer-content {
+.footer-content {
     display: flex;
     flex-direction: column; /* Make the content stack vertically */
     align-items: center;
     gap: 15px;
-  }
+}
   
-  .footer-logo {
+.footer-logo {
     width: 300px; /* Increase the size of your logo */
     height: auto;
     margin-bottom: 10px;
-  }
+}
   
-  footer p {
+footer p {
     font-family: 'Poppins', sans-serif;
     color: #fff; /* White text for readability */
     margin: 0;
-  }
+}
   
-  .etsy-button {
+.etsy-button {
     display: inline-block;
     background-color: #f16521; /* Etsy's orange */
     color: #fff;
@@ -179,26 +197,89 @@ footer {
     font-weight: 600;
     transition: background-color 0.3s ease;
     margin-top: 5px; /* Create separation between the text and button */
-  }
+}
   
-  .etsy-button:hover {
+.etsy-button:hover {
     background-color: #d35400; /* Darker shade of orange on hover */
-  }
+}
   
-  .social-icons {
+.social-icons {
     margin-top: 20px; /* Space between Etsy button and icons */
-  }
+}
   
-  .social-icons a {
+.social-icons a {
     color: #fff;
     font-size: 24px;
     margin-left: 15px;
     text-decoration: none;
     transition: color 0.3s ease;
-  }
+}
   
-  .social-icons a:hover {
+.social-icons a:hover {
     color: #ddd; /* Lighten the icon color on hover */
-  }
+}
     
-  
+/* Dashboard Title Style */
+.dashboard-title {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    padding-top: 40px;
+    padding-left: 10px;
+    max-width: 1200px;
+    margin: 0 auto;     /* Adjust padding to match container */
+}
+
+.dashboard-title h1 {
+    font-size: 28px;
+    color: #333;
+    margin: 0;
+}
+
+/* Control Panel Dropdown */
+select {
+    padding: 10px;
+    width: 100%;
+    border-radius: 12px;
+    border: 2px solid #ddd;
+    background-color: #fff;
+    color: #333; /* Dark gray text */
+    margin-top: 15px;
+}
+
+/* Control Panel Styles */
+.control-panel label {
+    display: block;
+    margin-bottom: 10px;
+    color: #5c6ac4; /* Match color with the theme */
+    font-weight: 600;
+}
+
+/* Updates Section */
+.updates-section {
+    background-color: #fff; /* Match the control panel background */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Consistent shadow */
+    margin-bottom: 20px;
+    max-width: 1160px;
+    margin: 20px auto; /* Center it like the dashboard */
+}
+
+.updates-section p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #333;
+    text-align: left; /* Align text to the left */
+}
+
+.updates-section ul {
+    list-style-type: disc;  /* Bullet points */
+    margin-left: 20px;      /* Indent the bullet points */
+}
+
+.updates-section ul li {
+    font-size: 16px;
+    color: #5c6ac4;         /* Same blue as the theme */
+    margin-bottom: 10px;
+}
