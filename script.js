@@ -109,10 +109,10 @@ document.getElementById('add-increase').addEventListener('click', () => {
   let patternText = '';
   if (increaseInterval === 0) {
     // First increase round after magic ring
-    patternText = `Round ${currentRound}: Inc in each stitch around using ${selectedStitch}. (${totalStitches + initialStitches} sts)`;
+    patternText = `Round ${currentRound}: INC in each stitch around. (${totalStitches + initialStitches} sts)`;
   } else {
     // Subsequent increase rounds
-    patternText = `Round ${currentRound}: *1 ${selectedStitch} in each of next ${increaseInterval} sts, inc in next st*, repeat around. (${totalStitches + initialStitches} sts)`;
+    patternText = `Round ${currentRound}: *1 ${selectedStitch} in each of next ${increaseInterval} sts, INC in next st*, repeat around. (${totalStitches + initialStitches} sts)`;
   }
 
   totalStitches += initialStitches; // Increase total stitches by initialStitches
@@ -136,7 +136,7 @@ decreaseButton.addEventListener('click', () => {
 
     let patternText = '';
     if (increaseInterval === 0) {
-      patternText = `Round ${currentRound}: Dec in each stitch around using ${selectedStitch}. (${totalStitches} sts)`;
+      patternText = `Round ${currentRound}: DEC in each stitch around. (${totalStitches} sts)`;
     } else {
       patternText = `Round ${currentRound}: *1 ${selectedStitch} in each of next ${increaseInterval} sts, dec over next 2 sts*, repeat around. (${totalStitches} sts)`;
     }
@@ -171,16 +171,16 @@ document.getElementById('delete-last-round').addEventListener('click', () => {
     currentRound--;
 
     // Adjust totalStitches and increaseInterval if necessary
-    if (lastEntry.includes('Inc in each stitch around')) {
+    if (lastEntry.includes('INC in each stitch around')) {
       totalStitches -= initialStitches;
       increaseInterval = Math.max(0, increaseInterval - 1);
-    } else if (lastEntry.includes('inc in next st')) {
+    } else if (lastEntry.includes('INC in next st')) {
       totalStitches -= initialStitches;
       increaseInterval = Math.max(0, increaseInterval - 1);
-    } else if (lastEntry.includes('Dec in each stitch around')) {
+    } else if (lastEntry.includes('DEC in each stitch around')) {
       totalStitches += initialStitches;
       increaseInterval++;
-    } else if (lastEntry.includes('dec over next 2 sts')) {
+    } else if (lastEntry.includes('DEC over next 2 sts')) {
       totalStitches += initialStitches;
       increaseInterval++;
     } else if (lastEntry.includes('(') && lastEntry.includes('sts)')) {
@@ -420,12 +420,93 @@ function updateButtonStates() {
 }
 
 function updatePatternDisplay() {
-  const formattedPattern = pattern.map((line) => {
-    const updatedLine = line.replace(/(Round|Row) (\d+)(-\d+)?:/, (match) => `<b>${match}</b>`);
-    return updatedLine;
-  }).join('<br>');
-  document.getElementById('pattern').innerHTML = formattedPattern;
+  const mergedPattern = [];
+  let previousPattern = "";
+  let previousStitchCount = "";
+  let roundStart = 0;
+  let roundEnd = 0;
+
+  pattern.forEach((line, index) => {
+    // Check if the line is a round (not color changes or other instructions)
+    const match = line.match(/Round (\d+): (.*) \((\d+) sts\)/);
+
+    if (match) {
+      const currentRound = parseInt(match[1]);
+      const currentPattern = match[2].trim();
+      const currentStitchCount = match[3];
+
+      // If this line matches the previous pattern and stitch count, extend the round range
+      if (currentPattern === previousPattern && currentStitchCount === previousStitchCount) {
+        roundEnd = currentRound;
+      } else {
+        // Push the previous round range if it exists
+        if (roundStart !== 0) {
+          if (roundStart === roundEnd) {
+            mergedPattern.push(
+              `Round ${roundStart}: ${previousPattern} (${previousStitchCount} sts)`
+            );
+          } else {
+            mergedPattern.push(
+              `Rounds ${roundStart}-${roundEnd}: ${previousPattern} (${previousStitchCount} sts)`
+            );
+          }
+        }
+
+        // Start a new round range
+        previousPattern = currentPattern;
+        previousStitchCount = currentStitchCount;
+        roundStart = currentRound;
+        roundEnd = currentRound;
+      }
+    } else {
+      // If it's not a round, push the previous round range if it exists
+      if (roundStart !== 0) {
+        if (roundStart === roundEnd) {
+          mergedPattern.push(
+            `Round ${roundStart}: ${previousPattern} (${previousStitchCount} sts)`
+          );
+        } else {
+          mergedPattern.push(
+            `Rounds ${roundStart}-${roundEnd}: ${previousPattern} (${previousStitchCount} sts)`
+          );
+        }
+        previousPattern = "";
+        previousStitchCount = "";
+        roundStart = 0;
+        roundEnd = 0;
+      }
+
+      // Push non-round instruction as-is
+      mergedPattern.push(line);
+    }
+  });
+
+  // Push the last round if needed
+  if (roundStart !== 0) {
+    if (roundStart === roundEnd) {
+      mergedPattern.push(
+        `Round ${roundStart}: ${previousPattern} (${previousStitchCount} sts)`
+      );
+    } else {
+      mergedPattern.push(
+        `Rounds ${roundStart}-${roundEnd}: ${previousPattern} (${previousStitchCount} sts)`
+      );
+    }
+  }
+
+  // Display the merged pattern with bold formatting for both single and multiple rounds
+  const formattedPattern = mergedPattern
+    .map((line) => {
+      // Add bold to both "Round" and "Rounds" cases
+      const updatedLine = line.replace(/(Rounds? \d+(-\d+)?):/, (match) => `<b>${match}</b>`);
+      return updatedLine;
+    })
+    .join("<br>");
+    
+  document.getElementById("pattern").innerHTML = formattedPattern;
 }
+
+
 
 function savePattern() {
   localStorage.setItem('crochetPattern', JSON.stringify(pattern));
