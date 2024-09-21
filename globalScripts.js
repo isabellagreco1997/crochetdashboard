@@ -1,9 +1,14 @@
+// Start by showing the amigurumiDisplay (pattern)
+var amigurumiDisplay = document.getElementById('pattern');
+var crochetDisplay = document.getElementById('pattern-display');
+
+// Ensure amigurumiDisplay is visible when the page loads
+amigurumiDisplay.style.display = 'block';
+crochetDisplay.style.display = 'none';
+
 // Listen for changes in the starting method dropdown
 document.getElementById('starting-method').addEventListener('change', function () {
     var selectedValue = this.value;
-    
-    var amigurumiDisplay = document.getElementById('pattern');
-    var crochetDisplay = document.getElementById('pattern-display');
 
     // Hide both displays initially
     amigurumiDisplay.style.display = 'none';
@@ -16,6 +21,7 @@ document.getElementById('starting-method').addEventListener('change', function (
         crochetDisplay.style.display = 'block';
     }
 });
+
 
 // Text options for dynamic change
 const textOptions = [
