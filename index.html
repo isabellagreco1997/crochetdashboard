@@ -2,13 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>KnottyCreations | Crochet Pattern Generator Dashboard</title>
+  <title>Crochet Pattern Generator | KnottyCreations </title>
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&family=Open+Sans:wght@400;600&display=swap">
   <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+
 </head>
 <body>
 
@@ -17,6 +19,14 @@
           <img src="logo.png" alt="Logo" class="logo">
         </div>
     </header>
+
+    <!-- New Welcome Section -->
+<div id="welcome-section" class="section-wrapper">
+  <h2 class="welcome-title">Welcome to your Crochet Pattern Generator!</h2>
+  <p class="welcome-subtitle">What are we building today?</p>
+  <p class="dynamic-text">A bear plushie</p>
+</div>
+
 
   <!-- Main Content -->
   <div class="main-content">
@@ -31,9 +41,8 @@
         <!-- New Dropdown to Select Starting Method -->
         <label for="starting-method">Choose Starting Method:</label>
         <select id="starting-method">
-          <option value="magic-ring">Magic Ring</option>
-          <option value="chain">Chain (under construction)</option>
-          <option value="custom-round">Custom Round Builder (under construction)</option>
+          <option value="magic-ring">Amigurumi Pattern Builder</option>
+          <option value="custom-round">Crochet Pattern Builder</option>
         </select>
 
         <!-- Magic Ring Controls -->
@@ -64,11 +73,11 @@
 
           <!-- Custom Round Builder within Magic Ring Controls -->
           <label for="magic-ring-custom-instruction">Enter Custom Round Instruction:</label>
-          <textarea id="magic-ring-custom-instruction" rows="3" placeholder="E.g., 10 inc, then sc in next 10 sts."></textarea>
+          <textarea id="magic-ring-custom-instruction" rows="3" placeholder="E.g., 10 inc, then sc in next 10 sts." style="width: 97%;"></textarea>
           
           <!-- Input for total stitches after custom round -->
           <label for="magic-ring-custom-total-stitches">Total Stitches after this round:</label>
-          <input type="number" id="magic-ring-custom-total-stitches" min="1" />
+          <input type="number" id="magic-ring-custom-total-stitches" min="1" style="width: 97%;" />
 
           <!-- Explanatory text -->
           <p id="custom-round-explanation">Note: The Increase, Decrease, and Repeat buttons will be disabled until you specify the total stitch count for the custom round.</p>
@@ -154,39 +163,64 @@
 
         <!-- Custom Round Builder Controls -->
         <div id="custom-round-controls" style="display: none;">
-          <label for="custom-round-input">Enter Custom Instruction:</label>
-          <textarea id="custom-round-input" rows="3" placeholder="E.g., Round 5: [2 sc, inc] repeat around."></textarea>
-          <button id="add-custom-round"><i class="fas fa-plus-circle"></i> Add to Pattern</button>
-          <button id="delete-last-custom"><i class="fas fa-trash-alt"></i> Delete Last Entry</button>
-          <button id="clear-pattern-custom"><i class="fas fa-broom"></i> Clear Entire Pattern</button>
+          <div class="custom-round-builder">
+
+            <button id="undo-button"><i class="fas fa-undo"></i> Undo</button>
+    <button id="redo-button" disabled><i class="fas fa-redo"></i> Do</button>
+    <button id="clear-pattern-button"><i class="fas fa-broom"></i> Clear Pattern</button>
+            <h2 class="section-title">► Custom Round Builder</h2>
+            
+          
+            <!-- Block buttons with icons -->
+            <div class="block-buttons">
+              <button class="block-button" data-action="chain"><i class="fas fa-link"></i> CH</button>
+              <button class="block-button" data-action="skip"><i class="fas fa-forward"></i> SK</button>
+              <button class="block-button" data-action="sc"><i class="fas fa-crop-alt"></i> SC</button>
+              <button class="block-button" data-action="hdc"><i class="fas fa-crop-alt"></i> HDC</button>
+              <button class="block-button" data-action="dc"><i class="fas fa-crop-alt"></i> DC</button>
+              <button class="block-button" data-action="tc"><i class="fas fa-crop-alt"></i> TC</button>
+              <button class="block-button" data-action="sl-st"><i class="fas fa-minus"></i> SL ST</button>
+              <button class="block-button" data-action="inc"><i class="fas fa-plus-circle"></i> INC</button>
+              <button class="block-button" data-action="dec"><i class="fas fa-minus-circle"></i> DEC</button>
+              <button class="block-button" data-action="ch-sp"><i class="fas fa-link"></i> CH SP</button>
+              <button class="block-button" data-action="v-stitch"><i class="fas fa-arrows-alt-v"></i> V-Stitch</button>
+              <button class="block-button" data-action="shell-stitch"><i class="fas fa-fan"></i> Shell Stitch</button>
+              <button class="block-button" data-action="picot"><i class="fas fa-dot-circle"></i> Picot</button>
+              <button class="block-button" data-action="cluster"><i class="fas fa-grip-lines"></i> Cluster</button>
+              <button class="block-button" data-action="flo"><i class="fas fa-arrow-up"></i> FLO</button>
+              <button class="block-button" data-action="blo"><i class="fas fa-arrow-down"></i> BLO</button>
+              <button class="block-button" data-action="fpdc"><i class="fas fa-arrow-right"></i> FPDC</button>
+          
+              <!-- Next Line Button -->
+              <button class="block-button" data-action="next-line"><i class="fas fa-arrow-down"></i> Next Line</button>
+            </div>
+          
+            <!-- Toggle for auto-adding rounds -->
+            <div class="round-toggle">
+              <label>
+                <input type="checkbox" id="auto-round-toggle" checked> Automatically add rounds when I press Next Line
+              </label>
+              <br>
+              <label>
+                <input type="checkbox" id="comma-toggle" checked> Add commas between stitches
+              </label>
+              
+            </div>
+          
+            <!-- Add Round button appears only when the toggle is unchecked -->
+            <div class="add-round-button" style="display: none;">
+              <button class="block-button" id="add-round-button"><i class="fas fa-plus-circle"></i> Add Round</button>
+            </div>
+          
+            <!-- Button for manually adding a new line when toggle is off -->
+            <div class="manual-next-line" style="display: none;">
+              <button class="block-button" id="manual-next-line-button">Add Next Line</button>
+            </div>
+          </div>
+                    
 
           <div class="yarn-group">
-            <label for="yarn-color-custom">Choose yarn color:</label>
-            <select id="yarn-color-custom">
-              <!-- Same options as before -->
-              <option value="Color A">Color A</option>
-              <option value="Color B">Color B</option>
-              <option value="Color C">Color C</option>
-              <option value="Color D">Color D</option>
-              <option value="Color E">Color E</option>
-              <option value="Red">Red</option>
-              <option value="Blue">Blue</option>
-              <option value="Green">Green</option>
-              <option value="Yellow">Yellow</option>
-              <option value="Purple">Purple</option>
-              <option value="Pink">Pink</option>
-              <option value="White">White</option>
-              <option value="Black">Black</option>
-              <option value="Orange">Orange</option>
-              <option value="Teal">Teal</option>
-              <option value="Brown">Brown</option>
-              <option value="Magenta">Magenta</option>
-              <option value="Lavender">Lavender</option>
-              <option value="Gray">Gray</option>
-              <option value="Gold">Gold</option>
-              <option value="Silver">Silver</option>
-            </select>
-            <button id="add-yarn-color-custom"><i class="fas fa-palette"></i> Add Yarn Color</button>
+            
           </div>
         </div>
       </section>
@@ -196,7 +230,14 @@
     <div class="section-wrapper">
       <h2 class="section-title">► Your Crochet Pattern</h2>
       <section class="pattern-display">
-        <div id="pattern" class="pattern-text"></div>
+
+
+<!-- Pattern display for Amigurumi Builder -->
+<div id="pattern-display" class="pattern-text" style="display: none;"></div>
+
+<!-- Pattern display for Crochet Pattern Builder -->
+<div id="pattern" class="pattern-text" style="display: none;"></div>
+
       </section>
     </div>
   </div>
@@ -251,5 +292,8 @@
   </footer>
   
   <script src="script.js"></script>
+  <script src="customRound.js"></script>
+  <script src="globalScripts.js"></script>
+
 </body>
 </html>

@@ -515,3 +515,48 @@ function savePattern() {
   localStorage.setItem('increaseInterval', increaseInterval);
   localStorage.setItem('initialStitches', initialStitches);
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  const startingMethodDropdown = document.getElementById("starting-method");
+  const magicRingControls = document.getElementById("magic-ring-controls");
+  const chainControls = document.getElementById("chain-controls");
+
+  // Get the pattern display elements
+  const crochetPatternDisplay = document.getElementById("crochet-pattern-display");
+  const amigurumiPatternDisplay = document.getElementById("amigurumi-pattern-display");
+
+  // Show/hide relevant controls and pattern displays based on the dropdown selection
+  startingMethodDropdown.addEventListener("change", function () {
+      const selectedMethod = this.value;
+
+      // Hide both displays initially
+      crochetPatternDisplay.style.display = 'none';
+      amigurumiPatternDisplay.style.display = 'none';
+
+      if (selectedMethod === 'magic-ring') {
+          magicRingControls.style.display = "block";    // Show Amigurumi Pattern Builder controls
+          chainControls.style.display = "none";         // Hide Crochet Pattern Builder controls
+          
+          amigurumiPatternDisplay.style.display = "block";  // Show Amigurumi pattern display
+      } else if (selectedMethod === 'custom-round') {
+          magicRingControls.style.display = "none";     // Hide Amigurumi Pattern Builder controls
+          chainControls.style.display = "block";        // Show Crochet Pattern Builder controls
+
+          crochetPatternDisplay.style.display = "block";    // Show Crochet pattern display
+      }
+  });
+
+  // Trigger an initial state based on the current selection
+  const initialSelection = startingMethodDropdown.value;
+  if (initialSelection === "magic-ring") {
+      magicRingControls.style.display = "block";
+      chainControls.style.display = "none";
+      amigurumiPatternDisplay.style.display = "block";
+      crochetPatternDisplay.style.display = "none";
+  } else {
+      magicRingControls.style.display = "none";
+      chainControls.style.display = "block";
+      amigurumiPatternDisplay.style.display = "none";
+      crochetPatternDisplay.style.display = "block";
+  }
+});
